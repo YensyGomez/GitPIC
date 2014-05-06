@@ -30,8 +30,6 @@ void Output (char* fn1, char* fn2, double t, vector<double> r, vector<double> v)
 double L; int N, C;
 
 
-
-
 int main()
 {
   // Parametros
@@ -100,9 +98,10 @@ int main()
     data[7] = "data7.out"; data[8] = "data8.out"; data[9] = "data9.out";
     data[10] = "data10.out";
 
+
     Output (phase[0], data[0], t, r, v);
 
-  // Evolve solution
+  /*// Evolve solution
       vector<double> y(2*N);
       Load (r, v, y);
       for (int k = 1; k <= 10; k++)
@@ -128,6 +127,9 @@ int main()
           Output(phase[k], data[k], t, r, v);
         }
 
+
+
+*/
       return 0;
 
 
@@ -206,8 +208,8 @@ void fft_forward (vector<double>f, vector<double>&Fr, vector<double>&Fi)
   // se inician los valores de la parte real
   for (int j = 0; j < C; j++)
     {
-      //c_re (ff[j]) = f[j];
-      //c_im (ff[j]) = 0.;
+      c_re (ff[j]) = f[j];
+      c_im (ff[j]) = 0.;
     }
 
   //calculando el fft en 1 dimension
@@ -342,6 +344,8 @@ void rhs_eval (double t, vector<double> y, vector<double>& dydt)
   // Calculate electron number density
   Density (r0, ne);
 
+
+
   // Solve Poisson's equation
   double n0 = double (N) / L;
   for (int j = 0; j < C; j++)
@@ -466,14 +470,12 @@ void Output (char* fn1, char* fn2, double t,
   }
 
   Density (r, ne);
-  for(int i=0; i<v.size();i++)
-    {
-  	  //cout<<ne[i]<<endl;
-    }
 
 
   for (int j = 0; j < C; j++)
-    n[j] = double (C) * ne[j] / double (N) - 1.;
+  {
+	  n[j] = double (C) * ne[j] / double (N) - 1.;
+  }
   double kappa = 2. * M_PI / L;
 
   Poisson1D (phi, n, kappa);
