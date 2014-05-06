@@ -1,0 +1,4 @@
+dominio 1000.0 
+particulas 10 
+celdas 1000 
+rayo 1000.0
