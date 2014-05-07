@@ -191,7 +191,7 @@ void Density (vector<double> r, vector<double>& n)
 
   for(int x=0; x<C; x++)
     {
-  	  cout<<n[x]<<endl;
+  	  //cout<<n[x]<<endl;
     }
 
 
@@ -242,7 +242,6 @@ void fft_backward (vector<double> Fr, vector<double> Fi, vector<double>& f)
     {
 	  c_re(FF[j]) = Fr[j];
 	  c_im(FF[j]) = Fi[j];
-	  (FF[j]).re= Fr[j];
     }
 
   //calculando la fft inversa
@@ -283,7 +282,6 @@ void Poisson1D (vector<double>& u, vector<double> v, double kappa)
 
   // Fourier transform source term
   fft_forward (v, Vr, Vi);
-
 
 
   // calcula fft para u
