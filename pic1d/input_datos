@@ -1,0 +1,16 @@
+ //inicializando los parametros
+  string STRING;
+  ifstream init;
+  init.open ("params.txt");
+  vector<string> vars;
+  while(!init.eof())
+         {
+ 	        getline(init,STRING,' ');
+ 	        vars.push_back(STRING); //leo lineas y almaceno en un vector
+         }
+  init.close();
+
+  L=atof(vars[1].c_str());
+  N=atoi(vars[3].c_str());
+  C=atoi(vars[5].c_str());
+  vb=atof(vars[7].c_str());

@@ -33,13 +33,13 @@ double L; int N, C;
 int main()
 {
   // Parametros
-  L =100.0;            // dominio de la solucion 0 <= x <= L (in Debye lengths)
+  L =100.0;            // dominio de la solucion 0 <= x <= L (en longitudes de debye)
   N =10000;            // Numero de particulas
   C = 1000;            // Numero de celdas
   double vb = 3.0;    // velocidad rayo promedio
-  double dt=0.1;    // delta tiempo (in inverse plasma frequencies)
+  double dt=0.1;    // delta tiempo (en frecuencias inversas del plasma)
   double tmax=1000;  // cantidad de iteraciones
-  int skip = int (tmax / dt) / 10;
+  int skip = int (tmax / dt) / 10; //saltos del algoritmo para reportar datos
 
   ofstream vel;
   vel.open("datav.txt");
@@ -47,26 +47,10 @@ int main()
   ofstream pos;
   pos.open("datap.txt");
 
+  ofstream graph;
+    pos.open("graph.txt");
 
 
- /* //inicializando los parametros
-  string STRING;
-  ifstream init;
-  init.open ("params.txt");
-  vector<string> vars;
-  while(!init.eof())
-         {
- 	        getline(init,STRING,' ');
- 	        vars.push_back(STRING); //leo lineas y almaceno en un vector
-         }
-  init.close();
-
-  L=atof(vars[1].c_str());
-  N=atoi(vars[3].c_str());
-  C=atoi(vars[5].c_str());
-  vb=atof(vars[7].c_str());
-
-  */
 
   vector<double> r, v, n(C); //r: posicion de las particulas, v: velocidad de particulas n: densidad de particulas por celda
 
@@ -74,7 +58,7 @@ int main()
   int seed = time (NULL); srand (seed);
   for (int i = 0; i < N; i++)
   {
-	  r.push_back(L*double (rand ()) / double (RAND_MAX));    //inicializando la posici˜n aleatoria
+	  r.push_back(L*double (rand ()) / double (RAND_MAX));    //inicializando la posicion aleatoria
       v.push_back(distribution(vb));                          //inicializa la velocidad con una distribucion maxwelliana
   }
 
@@ -84,12 +68,14 @@ int main()
   {
 	  vel<<v[i]<<endl;
 	  pos<<r[i]<<endl;
+	  graph<<r[i]<<" "<<v[i]<<endl;
+
   }
   vel.close();
   pos.close();
 
-  char* phase[11]; char* data[11];
-    phase[0] = "phase0.out";phase[1] = "phase1.out";phase[2] = "phase2.out";
+  char* phase[11]; char* data[11]; //archivos para almacenar los datos de salida
+    phase[0] = "phase0.txt";phase[1] = "phase1.out";phase[2] = "phase2.out";
     phase[3] = "phase3.out";phase[4] = "phase4.out";phase[5] = "phase5.out";
     phase[6] = "phase6.out";phase[7] = "phase7.out";phase[8] = "phase8.out";
     phase[9] = "phase9.out";phase[10] = "phase10.out";data[0] = "data0.out";
@@ -99,7 +85,12 @@ int main()
     data[10] = "data10.out";
 
 
-    Output (phase[0], data[0], t, r, v);
+    Output (phase[0], data[0], t, r, v); //inicializacion del algoritmo
+    /*
+     * el algoritmo output calcula la densidad de las part’culas para cada celda
+     * luego se calcula la ecuaci—n de poisson, la cual realiza una FFT que recibe la densidad
+
+     * */
 
   // Evolve solution
       vector<double> y(2*N);
