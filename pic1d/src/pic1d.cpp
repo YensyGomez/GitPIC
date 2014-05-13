@@ -34,11 +34,11 @@ int main()
 {
   // Parametros
   L =100.0;            // dominio de la solucion 0 <= x <= L (in Debye lengths)
-  N =100;            // Numero de particulas
-  C = 100;            // Numero de celdas
+  N =10000;            // Numero de particulas
+  C = 1000;            // Numero de celdas
   double vb = 3.0;    // velocidad rayo promedio
   double dt=0.1;    // delta tiempo (in inverse plasma frequencies)
-  double tmax=20;  // cantidad de iteraciones
+  double tmax=1000;  // cantidad de iteraciones
   int skip = int (tmax / dt) / 10;
 
   ofstream vel;
@@ -101,7 +101,7 @@ int main()
 
     Output (phase[0], data[0], t, r, v);
 
-  /*// Evolve solution
+  // Evolve solution
       vector<double> y(2*N);
       Load (r, v, y);
       for (int k = 1; k <= 10; k++)
@@ -129,7 +129,7 @@ int main()
 
 
 
-*/
+
       return 0;
 
 
@@ -314,8 +314,8 @@ void Electric (vector<double> phi, vector<double>& E)
   {
 	  E[j] = (phi[j-1] - phi[j+1]) / 2. / dx;
   }
-  E[0] = (phi[C-1] - phi[1]) / 2. / dx;
-  E[C-1] = (phi[C-2] - phi[0]) / 2. / dx;
+  E[0] = (phi[C-1] - phi[1]) / (2. * dx);
+  E[C-1] = (phi[C-2] - phi[0]) /  (2. * dx);
 }
 // Ecuaciones de movimiento.
 // Electron equations of motion:
