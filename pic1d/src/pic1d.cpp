@@ -177,14 +177,9 @@ void Density (vector<double> r, vector<double>& n)
     {
       int j = int (r[i] / dx);  //para saber en cual celda queda la particula (toma la parte entera)
       double y = r[i] / dx - double (j); // la posicion exacta de la particula dentro de la celda
-      n[j] += (1. - y) / dx; //se le carga el valor a la celda de la diferencia y el
-      if (j+1 == C) n[0] += y / dx;
+      n[j] += (1. - y) / dx; //se le carga el valor a la celda de la diferencia y el resto se lo carga a la celda siguiente
+      if (j+1 == C) n[0] += y / dx; //en caso de estar en la ultima celda, se reinyecta el valor a la primera celda
       else n[j+1] += y / dx;
-    }
-
-  for(int x=0; x<C; x++)
-    {
-  	  //cout<<n[x]<<endl;
     }
 
 
@@ -248,7 +243,7 @@ void fft_backward (vector<double> Fr, vector<double> Fi, vector<double>& f)
 }
 
 //The following routine solves Poisson's equation in 1-D to find the instantaneous electric potential on a uniform grid.
-
+//
 // Solves 1-d Poisson equation:
 //    d^u / dx^2 = v   for  0 <= x <= L
 // Periodic boundary conditions:
