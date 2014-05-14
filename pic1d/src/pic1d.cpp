@@ -34,7 +34,7 @@ int main()
 {
   // Parametros
   L =100.0;            // dominio de la solucion 0 <= x <= L (en longitudes de debye)
-  N =10000;            // Numero de particulas
+  N =100000;            // Numero de particulas
   C = 1000;            // Numero de celdas
   double vb = 3.0;    // velocidad rayo promedio
   double dt=0.1;    // delta tiempo (en frecuencias inversas del plasma)
@@ -87,14 +87,16 @@ int main()
 
     Output (phase[0], data[0], t, r, v); //inicializacion del algoritmo
     /*
-     * el algoritmo output calcula la densidad de las part’culas para cada celda
-     * luego se calcula la ecuaci—n de poisson, la cual realiza una FFT que recibe la densidad
+     * La funcion Output calcula la densidad de las part’culas para cada celda
+     * luego se calcula la ecuaci—n de poisson, la cual realiza una FFT que recibe el potencial
+     * electrostatico. las ecuaciones estan explicadas en el paquete de fotocopias, en la parte donde dice
+     * "soluci˜n de la ecuacion de poisson" (normalizada)
 
      * */
 
-  // Evolve solution
+  // iterando la solucion
       vector<double> y(2*N);
-      Load (r, v, y);
+      Load (r, v, y);    //carga los valores de la posicion y la velocidad en el vector "y"
       for (int k = 1; k <= 10; k++)
         {
           for (int kk = 0; kk < skip; kk++)
@@ -173,9 +175,9 @@ void Density (vector<double> r, vector<double>& n)
   // Evaluar el numero de densidad
   for (int i = 0; i < N; i++)
     {
-      int j = int (r[i] / dx);
-      double y = r[i] / dx - double (j);
-      n[j] += (1. - y) / dx;
+      int j = int (r[i] / dx);  //para saber en cual celda queda la particula (toma la parte entera)
+      double y = r[i] / dx - double (j); // la posicion exacta de la particula dentro de la celda
+      n[j] += (1. - y) / dx; //se le carga el valor a la celda de la diferencia y el
       if (j+1 == C) n[0] += y / dx;
       else n[j+1] += y / dx;
     }
