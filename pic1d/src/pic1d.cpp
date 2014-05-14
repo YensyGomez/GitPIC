@@ -88,8 +88,8 @@ int main()
     Output (phase[0], data[0], t, r, v); //inicializacion del algoritmo
     /*
      * La funcion Output calcula la densidad de las part’culas para cada celda
-     * luego se calcula la ecuaci—n de poisson, la cual realiza una FFT que recibe el potencial
-     * electrostatico. las ecuaciones estan explicadas en el paquete de fotocopias, en la parte donde dice
+     * luego se calcula la ecuaci—n de poisson, la cual realiza una FFT que recibe la densidad de particulas en las celdas
+     * las ecuaciones estan explicadas en el paquete de fotocopias, en la parte donde dice
      * "soluci˜n de la ecuacion de poisson" (normalizada)
 
      * */
@@ -160,8 +160,8 @@ double distribution (double vb)     //generador de distribuci˜n maxwelliana para
   }
 
 }
-//c‡lculo de la densidad de particulas en cada celda de la malla.
-//si la part“cula esta en el borde del espacio de fase, coloca en la celda cero la densidad restante.
+/*c‡lculo de la densidad de particulas en cada celda de la malla.
+si la part“cula esta en el borde del espacio de fase, coloca en la celda cero la densidad restante.*/
 
 void Density (vector<double> r, vector<double>& n)
 {
@@ -247,7 +247,7 @@ void fft_backward (vector<double> Fr, vector<double> Fi, vector<double>& f)
 // Solves 1-d Poisson equation:
 //    d^u / dx^2 = v   for  0 <= x <= L
 // Periodic boundary conditions:
-//    u(x + L) = u(x),  v(x + L) = v(x)
+//    u(x + L) = u(x),  v(x + L) = v(x) // no es claro
 // Arrays u and v assumed to be of length J.
 // Now, jth grid point corresponds to
 //    x_j = j dx  for j = 0,J-1
@@ -255,12 +255,12 @@ void fft_backward (vector<double> Fr, vector<double> Fi, vector<double>& f)
 // Also,
 //    kappa = 2 pi / L
 
-void Poisson1D (vector<double>& u, vector<double> v, double kappa)
+void Poisson1D (vector<double>& u, vector<double> v, double kappa) // recibe el vector v de densidad, la constante kappa  y arroja el resultado de potencial electroestatico.
 {
 
-  vector<double> Vr(C), Vi(C), Ur(C), Ui(C);
+  vector<double> Vr(C), Vi(C), Ur(C), Ui(C); // crea el vector de imagiarios y reales hasta la cantida de celdas y es igual para los vectores del potencial electroestatico.
 
-  for (int i=0; i<Vr.size(); i++)
+  for (int i=0; i<Vr.size(); i++) // inicaliza los vectores con ceros.
     {
   	  Vr[i]=0.;
   	  Vi[i]=0.;
@@ -274,7 +274,7 @@ void Poisson1D (vector<double>& u, vector<double> v, double kappa)
 
   // calcula fft para u
   Ur[0] = Ui[0] = 0.;
-  for (int j=1;j<=C/2;j++)
+  for (int j=1;j<=C/2;j++)// crea el vector de reales e imaginarios del potencial electroestatico.
     {
       Ur[j] = - Vr[j] / double (j * j) / kappa / kappa;
       Ui[j] = - Vi[j] / double (j * j) / kappa / kappa;
@@ -286,23 +286,23 @@ void Poisson1D (vector<double>& u, vector<double> v, double kappa)
     }
 
   // fft inversa para hallar u
-  fft_backward (Ur, Ui, u);
+  fft_backward (Ur, Ui, u); // saca la inversa de los vectores y obtiene el potencial.
 
 
 }
 
 // Calculate electric field from potential
 
-void Electric (vector<double> phi, vector<double>& E)
+void Electric (vector<double> phi, vector<double>& E) // recibe el potencial electroestatico calculado por la funcion poisson 1D  y se calcula e campo electrico.
 {
-  double dx = L / double (C);
+  double dx = L / double (C); // el delta de x representa el tama–o de la malla
 
 
-  for (int j = 1; j < C-1; j++)
+  for (int j = 1; j < C-1; j++) // se toma k desde la celda 1 hasta la cantidad de celdas -1.
   {
-	  E[j] = (phi[j-1] - phi[j+1]) / 2. / dx;
+	  E[j] = (phi[j-1] - phi[j+1]) / 2. / dx; // teniedo en cuenta se calcula el campo electrico para cada una de las celdas  teniendo en cuenta el potencial electroestatico de la celda anterior menos el potencial de la celda siguiente
   }
-  E[0] = (phi[C-1] - phi[1]) / (2. * dx);
+  E[0] = (phi[C-1] - phi[1]) / (2. * dx); // se inicializa o se le dan los valores de borde a la celda inicial y final que son ya conocido por la condiciones de borde del potencial electroestatico.
   E[C-1] = (phi[C-2] - phi[0]) /  (2. * dx);
 }
 // Ecuaciones de movimiento.
@@ -310,16 +310,18 @@ void Electric (vector<double> phi, vector<double>& E)
 //    y(0:N-1)  = r_i
 //    y(N:2N-1) = dr_i/dt
 
-void rhs_eval (double t, vector<double> y, vector<double>& dydt)
+void rhs_eval (double t, vector<double> y, vector<double>& dydt)// recibe en valor de t que incial mente en cero, y un vector y que iniciamente esta inicializado deacierdo a la posicion y velocidad de la particula
 {
   // Declare local arrays
-  vector<double> r(N), v(N), rdot(N), vdot(N), r0(N);
-  vector<double> ne(C), rho(C), phi(C), E(C);
+  vector<double> r(N), v(N), rdot(N), vdot(N), r0(N); //inicializa los vectores.
+  vector<double> ne(C), rho(C), phi(C), E(C); // ne el numero de electrones, rho promedio de densidades, phi otencial electroestatico , e campo electrico en cada celda.
+
 
   // Unload data from y
   //UnLoad (y, r, v);
 
   // Make sure all coordinates in range 0 to L
+  //limites de logitud por donde se mueven las particulas
   r0 = r;
   for (int i = 0; i < N; i++)
     {
@@ -328,11 +330,13 @@ void rhs_eval (double t, vector<double> y, vector<double>& dydt)
     }
 
   // Calculate electron number density
+  //calculan la densidad con el numero de electrones que se encuentra dentro de la malla de estudio
   Density (r0, ne);
 
 
 
   // Solve Poisson's equation
+  // el numero de particulas en este caso de electrones calculan el rho para cada celda y despues se llama la funcion Poisson1D para calcular e potencial electroestatico.
   double n0 = double (N) / L;
   for (int j = 0; j < C; j++)
     rho[j] = ne[j] / n0 - 1.;
@@ -344,6 +348,7 @@ void rhs_eval (double t, vector<double> y, vector<double>& dydt)
   Electric (phi, E);
 
   // Equations of motion
+  // al tener el potencial electroestatico se obtiene las ecuacioes de movimiento.
   for (int i = 0; i < N; i++)
     {
       double dx = L / double (C);
@@ -363,7 +368,7 @@ void rhs_eval (double t, vector<double> y, vector<double>& dydt)
   // Load data into dydt
   Load (rdot, vdot, dydt);
 }
-
+// se actualizan las nuevas posiciones y velocidades.
 void Load (vector<double> r, vector<double> v, vector<double>& y)
 {
   for (int i = 0; i < N; i++)
@@ -435,7 +440,7 @@ void rk4_fixed (double& x, vector<double>& y,
 
   return;
 }
-
+//arroja los resultados
 void Output (char* fn1, char* fn2, double t,
 	     vector<double> r, vector<double> v)
 {
