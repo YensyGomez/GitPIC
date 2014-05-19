@@ -34,11 +34,11 @@ int main()
 {
   // Parametros
   L =100.0;            // dominio de la solucion 0 <= x <= L (en longitudes de debye)
-  N =100000;            // Numero de particulas
+  N =10000;            // Numero de particulas
   C = 1000;            // Numero de celdas
   double vb = 3.0;    // velocidad rayo promedio
   double dt=0.1;    // delta tiempo (en frecuencias inversas del plasma)
-  double tmax=1000;  // cantidad de iteraciones
+  double tmax=100;  // cantidad de iteraciones
   int skip = int (tmax / dt) / 10; //saltos del algoritmo para reportar datos
 
   ofstream vel;
@@ -48,7 +48,7 @@ int main()
   pos.open("datap.txt");
 
   ofstream graph;
-    pos.open("graph.txt");
+    graph.open("graph.txt");
 
 
 
@@ -73,6 +73,7 @@ int main()
   }
   vel.close();
   pos.close();
+  graph.close();
 
   char* phase[11]; char* data[11]; //archivos para almacenar los datos de salida
     phase[0] = "phase0.txt";phase[1] = "phase1.out";phase[2] = "phase2.out";
