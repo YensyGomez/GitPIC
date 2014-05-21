@@ -38,7 +38,7 @@ int main()
   C = 1000;            // Numero de celdas
   double vb = 3.0;    // velocidad rayo promedio
   double dt=0.1;    // delta tiempo (en frecuencias inversas del plasma)
-  double tmax=100;  // cantidad de iteraciones
+  double tmax=1000;  // cantidad de iteraciones
   int skip = int (tmax / dt) / 10; //saltos del algoritmo para reportar datos
 
   ofstream vel;
@@ -50,8 +50,6 @@ int main()
   ofstream graph;
     graph.open("graph.txt");
 
-
-
   vector<double> r, v, n(C); //r: posicion de las particulas, v: velocidad de particulas n: densidad de particulas por celda
 
   double t = 0.;
@@ -61,8 +59,6 @@ int main()
 	  r.push_back(L*double (rand ()) / double (RAND_MAX));    //inicializando la posicion aleatoria
       v.push_back(distribution(vb));                          //inicializa la velocidad con una distribucion maxwelliana
   }
-
-
 
   for(int i=0; i<N;i++) //se imprimen los datos iniciales en un archivo
   {
@@ -76,7 +72,7 @@ int main()
   graph.close();
 
   char* phase[11]; char* data[11]; //archivos para almacenar los datos de salida
-    phase[0] = "phase0.txt";phase[1] = "phase1.out";phase[2] = "phase2.out";
+    phase[0] = "phase0.out";phase[1] = "phase1.out";phase[2] = "phase2.out";
     phase[3] = "phase3.out";phase[4] = "phase4.out";phase[5] = "phase5.out";
     phase[6] = "phase6.out";phase[7] = "phase7.out";phase[8] = "phase8.out";
     phase[9] = "phase9.out";phase[10] = "phase10.out";data[0] = "data0.out";
@@ -85,6 +81,7 @@ int main()
     data[7] = "data7.out"; data[8] = "data8.out"; data[9] = "data9.out";
     data[10] = "data10.out";
 
+    clock_t t1 = clock();
 
     Output (phase[0], data[0], t, r, v); //inicializacion del algoritmo
     /*
@@ -105,14 +102,14 @@ int main()
                // Take time-step
         	   rk4_fixed(t, y, rhs_eval, dt);
 
-               // Make sure all coordinates in range 0 to L.
+               // asegurarse que todas las part“culas estan dentro del espacio de fase (reinyeccion)
                for (int i = 0; i < N; i++)
                  {
                    if (y[i] < 0.) y[i] += L;
                    if (y[i] > L) y[i] -= L;
                  }
 
-               //printf ("t = %11.4e\n", t);
+               printf ("t = %11.4e\n", t);
             }
           //printf ("Plot %3d\n", k);
 
@@ -122,7 +119,16 @@ int main()
         }
 
 
+      clock_t t2 = clock();
+      double exectime= (t2-t1)/1000000.0;
+      int horas = exectime/60/60;
+      int minutos =  exectime/60 - horas;
+      double segundos = exectime - int(minutos*60);
 
+
+      cout<<"tiempo algoritmo con "<<N<<" particulas, "<<C<<" celdas, dt = "<<dt<<", iteraciones = "<<tmax<<endl;
+      cout<<"tiempo total en segundos: "<<exectime<<endl;
+      cout<<((t2-t1)/1000000)/86400<<" horas, "<<minutos<<" minutos, "<<segundos <<" segundos"<<endl;
 
       return 0;
 
@@ -311,7 +317,7 @@ void Electric (vector<double> phi, vector<double>& E) // recibe el potencial ele
 //    y(0:N-1)  = r_i
 //    y(N:2N-1) = dr_i/dt
 
-void rhs_eval (double t, vector<double> y, vector<double>& dydt)// recibe en valor de t que incial mente en cero, y un vector y que iniciamente esta inicializado deacierdo a la posicion y velocidad de la particula
+void rhs_eval (double t, vector<double> y, vector<double>& dydt)// recibe en valor de t que incialmente en cero, y un vector y que iniciamente esta inicializado deacierdo a la posicion y velocidad de la particula
 {
   // Declare local arrays
   vector<double> r(N), v(N), rdot(N), vdot(N), r0(N); //inicializa los vectores.
@@ -319,11 +325,12 @@ void rhs_eval (double t, vector<double> y, vector<double>& dydt)// recibe en val
 
 
   // Unload data from y
-  //UnLoad (y, r, v);
+  UnLoad (y, r, v);
 
   // Make sure all coordinates in range 0 to L
   //limites de logitud por donde se mueven las particulas
   r0 = r;
+
   for (int i = 0; i < N; i++)
     {
       if (r0[i] < 0.) r0[i] += L;
@@ -333,8 +340,6 @@ void rhs_eval (double t, vector<double> y, vector<double>& dydt)// recibe en val
   // Calculate electron number density
   //calculan la densidad con el numero de electrones que se encuentra dentro de la malla de estudio
   Density (r0, ne);
-
-
 
   // Solve Poisson's equation
   // el numero de particulas en este caso de electrones calculan el rho para cada celda y despues se llama la funcion Poisson1D para calcular e potencial electroestatico.
@@ -450,6 +455,13 @@ void Output (char* fn1, char* fn2, double t,
   for (int i = 0; i < N; i++)
     fprintf (file, "%e %e\n", r[i], v[i]);
   fclose (file);
+
+  ofstream vel;
+    vel.open("prueba3");
+    for (int i = 0; i < N; i++)
+    	vel<<r[i]<<" "<<v[i]<<"tenga mijo"<<endl;
+    vel.close();
+
 
   // Write electric field data
   vector<double> ne(C), n(C), phi(C), E(C);
