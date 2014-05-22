@@ -112,13 +112,13 @@ int main()
       cout<<"tiempo total en segundos: "<<exectime<<endl;
       cout<<((t2-t1)/1000000)/86400<<" horas, "<<minutos<<" minutos, "<<segundos <<" segundos"<<endl;
 
-
-
+      ofstream params;
+      params.open("params.txt");
+      params<<"N: "<<N<<endl<<"C: "<<C<<endl<<"L: "<<L<<endl<<"vb: "<<vb<<endl<<"dt: "<<dt<<endl<<"tmax: "<<tmax<<endl<<"iteraciones: "<<tmax/dt<<endl;
+      params<<((t2-t1)/1000000)/86400<<" horas, "<<minutos<<" minutos, "<<segundos <<" segundos"<<endl;
+      params.close();
 
       return 0;
-
-
-
 
 }
 
