@@ -41,15 +41,6 @@ int main()
   double tmax=1000;  // cantidad de iteraciones. deben ser 100 mil segun el material
   int skip = int (tmax / dt) / 10; //saltos del algoritmo para reportar datos
 
-  ofstream vel;
-  vel.open("datav.txt");
-
-  ofstream pos;
-  pos.open("datap.txt");
-
-  ofstream graph;
-    graph.open("graph.txt");
-
   vector<double> r, v, n(C); //r: posicion de las particulas, v: velocidad de particulas n: densidad de particulas por celda
 
   double t = 0.;
@@ -60,16 +51,7 @@ int main()
       v.push_back(distribution(vb));                          //inicializa la velocidad con una distribucion maxwelliana
   }
 
-  for(int i=0; i<N;i++) //se imprimen los datos iniciales en un archivo
-  {
-	  vel<<v[i]<<endl;
-	  pos<<r[i]<<endl;
-	  graph<<r[i]<<" "<<v[i]<<endl;
 
-  }
-  vel.close();
-  pos.close();
-  graph.close();
 
   char* phase[11]; char* data[11]; //archivos para almacenar los datos de salida
     phase[0] = "phase0.txt";phase[1] = "phase1.txt";phase[2] = "phase2.txt";
@@ -85,10 +67,10 @@ int main()
 
     Output (phase[0], data[0], t, r, v); //inicializacion del algoritmo
     /*
-     * La funcion Output calcula la densidad de las part’culas para cada celda
-     * luego se calcula la ecuaci—n de poisson, la cual realiza una FFT que recibe la densidad de particulas en las celdas
+     * La funcion Output calcula la densidad de las partï¿½culas para cada celda
+     * luego se calcula la ecuaciï¿½n de poisson, la cual realiza una FFT que recibe la densidad de particulas en las celdas
      * las ecuaciones estan explicadas en el paquete de fotocopias, en la parte donde dice
-     * "soluci˜n de la ecuacion de poisson" (normalizada)
+     * "soluciï¿½n de la ecuacion de poisson" (normalizada)
 
      * */
 
@@ -102,7 +84,7 @@ int main()
                // Take time-step
         	   rk4_fixed(t, y, rhs_eval, dt);
 
-               // asegurarse que todas las part“culas estan dentro del espacio de fase (reinyeccion)
+               // asegurarse que todas las partï¿½culas estan dentro del espacio de fase (reinyeccion)
                for (int i = 0; i < N; i++)
                  {
                    if (y[i] < 0.) y[i] += L;
@@ -137,7 +119,7 @@ int main()
 
 }
 
-double distribution (double vb)     //generador de distribuci˜n maxwelliana para la velocidad
+double distribution (double vb)     //generador de distribuciï¿½n maxwelliana para la velocidad
 {
   // inicializa el generador aleatorio
   static int flag = 0;
@@ -166,8 +148,8 @@ double distribution (double vb)     //generador de distribuci˜n maxwelliana para
   }
 
 }
-/*c‡lculo de la densidad de particulas en cada celda de la malla.
-si la part“cula esta en el borde del espacio de fase, coloca en la celda cero la densidad restante.*/
+/*cï¿½lculo de la densidad de particulas en cada celda de la malla.
+si la partï¿½cula esta en el borde del espacio de fase, coloca en la celda cero la densidad restante.*/
 
 void Density (vector<double> r, vector<double>& n)
 {
@@ -192,7 +174,7 @@ void Density (vector<double> r, vector<double>& n)
 }
 
 // se usa la libreria fftw para calcular la transformada rapida de Fourier
-// los vectores de entrada y salida son de tama–o C
+// los vectores de entrada y salida son de tamaï¿½o C
 // se calcula la fft del vector f en los vectores Fr y Fi
 
 void fft_forward (vector<double>f, vector<double>&Fr, vector<double>&Fi)
@@ -301,7 +283,7 @@ void Poisson1D (vector<double>& u, vector<double> v, double kappa) // recibe el 
 
 void Electric (vector<double> phi, vector<double>& E) // recibe el potencial electroestatico calculado por la funcion poisson 1D  y se calcula e campo electrico.
 {
-  double dx = L / double (C); // el delta de x representa el tama–o de la malla
+  double dx = L / double (C); // el delta de x representa el tamaï¿½o de la malla
 
 
   for (int j = 1; j < C-1; j++) // se toma k desde la celda 1 hasta la cantidad de celdas -1.
@@ -492,7 +474,7 @@ void Output (char* fn1, char* fn2, double t,
     phase.close();
 
 
-  FILE* file = fopen (fn2, "w");
+/*  FILE* file = fopen (fn2, "w");
   for (int j = 0; j < C; j++)
     {
       double x = double (j) * L / double (C);
@@ -501,7 +483,7 @@ void Output (char* fn1, char* fn2, double t,
 
   x = L;
   fprintf (file, "%e %e %e %e\n", x, ne[0], n[0], E[0]);
-  fclose (file);
+  fclose (file);*/
 }
 
 
