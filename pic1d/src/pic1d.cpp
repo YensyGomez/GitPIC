@@ -34,11 +34,11 @@ int main()
 {
   // Parametros
   L =100.0;            // dominio de la solucion 0 <= x <= L (en longitudes de debye)
-  N =10000;            // Numero de particulas
+  N =1000;            // Numero de particulas
   C = 1000;            // Numero de celdas
   double vb = 3.0;    // velocidad rayo promedio
   double dt=0.1;    // delta tiempo (en frecuencias inversas del plasma)
-  double tmax=1000;  // cantidad de iteraciones
+  double tmax=1000;  // cantidad de iteraciones. deben ser 100 mil segun el material
   int skip = int (tmax / dt) / 10; //saltos del algoritmo para reportar datos
 
   ofstream vel;
@@ -72,14 +72,14 @@ int main()
   graph.close();
 
   char* phase[11]; char* data[11]; //archivos para almacenar los datos de salida
-    phase[0] = "phase0.out";phase[1] = "phase1.out";phase[2] = "phase2.out";
-    phase[3] = "phase3.out";phase[4] = "phase4.out";phase[5] = "phase5.out";
-    phase[6] = "phase6.out";phase[7] = "phase7.out";phase[8] = "phase8.out";
-    phase[9] = "phase9.out";phase[10] = "phase10.out";data[0] = "data0.out";
-    data[1] = "data1.out"; data[2] = "data2.out"; data[3] = "data3.out";
-    data[4] = "data4.out"; data[5] = "data5.out"; data[6] = "data6.out";
-    data[7] = "data7.out"; data[8] = "data8.out"; data[9] = "data9.out";
-    data[10] = "data10.out";
+    phase[0] = "phase0.txt";phase[1] = "phase1.txt";phase[2] = "phase2.txt";
+    phase[3] = "phase3.txt";phase[4] = "phase4.txt";phase[5] = "phase5.txt";
+    phase[6] = "phase6.txt";phase[7] = "phase7.txt";phase[8] = "phase8.txt";
+    phase[9] = "phase9.txt";phase[10] = "phase10.txt";data[0] = "data0.txt";
+    data[1] = "data1.txt"; data[2] = "data2.txt"; data[3] = "data3.txt";
+    data[4] = "data4.txt"; data[5] = "data5.txt"; data[6] = "data6.txt";
+    data[7] = "data7.txt"; data[8] = "data8.txt"; data[9] = "data9.txt";
+    data[10] = "data10.txt";
 
     clock_t t1 = clock();
 
@@ -109,7 +109,7 @@ int main()
                    if (y[i] > L) y[i] -= L;
                  }
 
-               printf ("t = %11.4e\n", t);
+               //printf ("t = %11.4e\n", t);
             }
           //printf ("Plot %3d\n", k);
 
@@ -161,7 +161,6 @@ double distribution (double vb)     //generador de distribuci˜n maxwelliana para
   if (x > f) return distribution (vb);
   else
   {
-	  //cout<<f<<endl;
 	  return v;
 
   }
@@ -298,7 +297,7 @@ void Poisson1D (vector<double>& u, vector<double> v, double kappa) // recibe el 
 
 }
 
-// Calculate electric field from potential
+// calculo del campo electrico teniendo el potencial de cada celda
 
 void Electric (vector<double> phi, vector<double>& E) // recibe el potencial electroestatico calculado por la funcion poisson 1D  y se calcula e campo electrico.
 {
@@ -349,11 +348,10 @@ void rhs_eval (double t, vector<double> y, vector<double>& dydt)// recibe en val
   double kappa = 2. * M_PI / L;
   Poisson1D (phi, rho, kappa);
 
-  //for(int i=0;i<phi.size();i++) cout<<phi[i]<<endl;
   // Calculate electric field
   Electric (phi, E);
 
-  // Equations of motion
+  // Ecuaciones de movimiento
   // al tener el potencial electroestatico se obtiene las ecuacioes de movimiento.
   for (int i = 0; i < N; i++)
     {
@@ -450,17 +448,13 @@ void rk4_fixed (double& x, vector<double>& y,
 void Output (char* fn1, char* fn2, double t,
 	     vector<double> r, vector<double> v)
 {
-  // Write phase-space data
-  FILE* file = fopen (fn1, "w");
-  for (int i = 0; i < N; i++)
-    fprintf (file, "%e %e\n", r[i], v[i]);
-  fclose (file);
 
-  ofstream vel;
-    vel.open("prueba3");
-    for (int i = 0; i < N; i++)
-    	vel<<r[i]<<" "<<v[i]<<"tenga mijo"<<endl;
-    vel.close();
+
+  ofstream phase;
+  phase.open(fn1);
+  for (int i = 0; i < N; i++)
+	  phase<<r[i]<<" "<<v[i]<<endl;
+  phase.close();
 
 
   // Write electric field data
@@ -485,13 +479,27 @@ void Output (char* fn1, char* fn2, double t,
   Poisson1D (phi, n, kappa);
   Electric (phi, E);
 
-  file = fopen (fn2, "w");
+  ofstream data;
+    data.open(fn2);
+    for (int j = 0; j < C; j++)
+    {
+    	double x = double (j) * L / double (C);
+    	data<<x<<" "<<ne[j]<<" "<<n[j]<<" "<<E[j]<<endl;
+    }
+    double x = L;
+    data<<x<<" "<<ne[0]<<" "<<n[0]<<" "<<E[0]<<endl;
+
+    phase.close();
+
+
+  FILE* file = fopen (fn2, "w");
   for (int j = 0; j < C; j++)
     {
       double x = double (j) * L / double (C);
       fprintf (file, "%e %e %e %e\n", x, ne[j], n[j], E[j]);
     }
-  double x = L;
+
+  x = L;
   fprintf (file, "%e %e %e %e\n", x, ne[0], n[0], E[0]);
   fclose (file);
 }
