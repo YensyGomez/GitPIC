@@ -33,9 +33,9 @@ double L; int N, C;
 int main()
 {
   // Parametros
-  L =100.0;            // dominio de la solucion 0 <= x <= L (en longitudes de debye)
-  N =1000000;            // Numero de particulas
-  C = 1000;            // Numero de celdas
+  L =25.0;            // dominio de la solucion 0 <= x <= L (en longitudes de debye)
+  N =100000;            // Numero de particulas
+  C = 5000;            // Numero de celdas
   double vb = 3.0;    // velocidad rayo promedio
   double dt=0.1;    // delta tiempo (en frecuencias inversas del plasma)
   double tmax=10000;  // cantidad de iteraciones. deben ser 100 mil segun el material
@@ -76,6 +76,7 @@ int main()
 
   // iterando la solucion
       vector<double> y(2*N);
+      int d1, d2 = 0;
       Load (r, v, y);    //carga los valores de la posicion y la velocidad en el vector "y"
       for (int k = 1; k <= 10; k++)
         {
@@ -91,9 +92,16 @@ int main()
                    if (y[i] > L) y[i] -= L;
                  }
 
-               //printf ("t = %11.4e\n", t);
+               d1=((kk*10)/skip) + ((k-1)*10);
+               if (d1>d2){
+            	   d2=d1;
+            	   cout<<((kk*10)/skip) + ((k-1)*10)<<"% completo"<<endl;
+               }
+
             }
-          //printf ("Plot %3d\n", k);
+          cout<<k*10<<"% completo"<<endl;
+          d1=0;
+          d2=0;
 
           // Output data
           UnLoad (y, r, v);
@@ -103,19 +111,19 @@ int main()
 
       clock_t t2 = clock();
       double exectime= (t2-t1)/1000000.0;
-      int horas = exectime/60/60;
-      int minutos =  exectime/60 - horas;
-      double segundos = exectime - int(minutos*60);
+      int horas = int(exectime/3600);
+      int minutos =  exectime/60 - (horas*60);
+      double segundos = exectime - (horas*3600) - int((exectime - (horas*3600))/60)*60;
 
 
       cout<<"tiempo algoritmo con "<<N<<" particulas, "<<C<<" celdas, dt = "<<dt<<", iteraciones = "<<tmax<<endl;
       cout<<"tiempo total en segundos: "<<exectime<<endl;
-      cout<<((t2-t1)/1000000)/86400<<" horas, "<<minutos<<" minutos, "<<segundos <<" segundos"<<endl;
+      cout<<horas<<" horas, "<<minutos<<" minutos, "<<segundos <<" segundos"<<endl;
 
       ofstream params;
       params.open("params.txt");
       params<<"N: "<<N<<endl<<"C: "<<C<<endl<<"L: "<<L<<endl<<"vb: "<<vb<<endl<<"dt: "<<dt<<endl<<"tmax: "<<tmax<<endl<<"iteraciones: "<<tmax/dt<<endl;
-      params<<((t2-t1)/1000000)/86400<<" horas, "<<minutos<<" minutos, "<<segundos <<" segundos"<<endl;
+      params<<horas<<" horas, "<<minutos<<" minutos, "<<segundos <<" segundos"<<endl;
       params.close();
 
       return 0;
