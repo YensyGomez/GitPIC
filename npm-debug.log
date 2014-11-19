@@ -1,0 +1,175 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'install', '-g', 'learnyounode' ]
+2 info using npm@1.4.9
+3 info using node@v0.10.28
+4 verbose cache add [ 'learnyounode', null ]
+5 verbose cache add name=undefined spec="learnyounode" args=["learnyounode",null]
+6 verbose parsed url { protocol: null,
+6 verbose parsed url   slashes: null,
+6 verbose parsed url   auth: null,
+6 verbose parsed url   host: null,
+6 verbose parsed url   port: null,
+6 verbose parsed url   hostname: null,
+6 verbose parsed url   hash: null,
+6 verbose parsed url   search: null,
+6 verbose parsed url   query: null,
+6 verbose parsed url   pathname: 'learnyounode',
+6 verbose parsed url   path: 'learnyounode',
+6 verbose parsed url   href: 'learnyounode' }
+7 silly lockFile 8d456d9f-learnyounode learnyounode
+8 verbose lock learnyounode /Users/admin/.npm/8d456d9f-learnyounode.lock
+9 silly lockFile 8d456d9f-learnyounode learnyounode
+10 silly lockFile 8d456d9f-learnyounode learnyounode
+11 verbose addNamed [ 'learnyounode', '' ]
+12 verbose addNamed [ null, '*' ]
+13 silly lockFile a353de34-learnyounode learnyounode@
+14 verbose lock learnyounode@ /Users/admin/.npm/a353de34-learnyounode.lock
+15 silly addNameRange { name: 'learnyounode', range: '*', hasData: false }
+16 verbose url raw learnyounode
+17 verbose url resolving [ 'https://registry.npmjs.org/', './learnyounode' ]
+18 verbose url resolved https://registry.npmjs.org/learnyounode
+19 info trying registry request attempt 1 at 16:37:13
+20 verbose etag "E1LR9ENY98UEPEVPIGB0M0IK4"
+21 http GET https://registry.npmjs.org/learnyounode
+22 http 304 https://registry.npmjs.org/learnyounode
+23 silly registry.get cb [ 304,
+23 silly registry.get   { date: 'Wed, 11 Jun 2014 21:37:16 GMT',
+23 silly registry.get     server: 'Apache',
+23 silly registry.get     via: '1.1 varnish',
+23 silly registry.get     'last-modified': 'Wed, 11 Jun 2014 21:37:16 GMT',
+23 silly registry.get     'cache-control': 'max-age=1',
+23 silly registry.get     etag: '"E1LR9ENY98UEPEVPIGB0M0IK4"',
+23 silly registry.get     'x-served-by': 'cache-jfk1027-JFK',
+23 silly registry.get     'x-cache': 'MISS',
+23 silly registry.get     'x-cache-hits': '0',
+23 silly registry.get     'x-timer': 'S1402522636.184669,VS0,VE110',
+23 silly registry.get     vary: 'Accept',
+23 silly registry.get     'content-length': '0',
+23 silly registry.get     'keep-alive': 'timeout=10, max=50',
+23 silly registry.get     connection: 'Keep-Alive' } ]
+24 verbose etag learnyounode from cache
+25 silly addNameRange number 2 { name: 'learnyounode', range: '*', hasData: true }
+26 silly addNameRange versions [ 'learnyounode',
+26 silly addNameRange   [ '0.0.0',
+26 silly addNameRange     '0.0.1',
+26 silly addNameRange     '0.0.2',
+26 silly addNameRange     '0.0.3',
+26 silly addNameRange     '0.0.4',
+26 silly addNameRange     '0.0.5',
+26 silly addNameRange     '0.0.6',
+26 silly addNameRange     '0.0.7',
+26 silly addNameRange     '0.0.8',
+26 silly addNameRange     '0.0.9',
+26 silly addNameRange     '0.1.0',
+26 silly addNameRange     '0.1.1',
+26 silly addNameRange     '0.2.0',
+26 silly addNameRange     '0.2.1',
+26 silly addNameRange     '0.2.2',
+26 silly addNameRange     '0.2.3',
+26 silly addNameRange     '0.2.4',
+26 silly addNameRange     '0.2.5',
+26 silly addNameRange     '0.2.6',
+26 silly addNameRange     '0.2.7',
+26 silly addNameRange     '0.2.8',
+26 silly addNameRange     '0.2.9',
+26 silly addNameRange     '0.2.10',
+26 silly addNameRange     '0.2.11',
+26 silly addNameRange     '0.2.12',
+26 silly addNameRange     '0.2.13',
+26 silly addNameRange     '0.2.14',
+26 silly addNameRange     '0.2.15',
+26 silly addNameRange     '0.2.16',
+26 silly addNameRange     '0.2.16-mimbug',
+26 silly addNameRange     '0.3.0',
+26 silly addNameRange     '0.3.1',
+26 silly addNameRange     '0.3.2',
+26 silly addNameRange     '0.3.3',
+26 silly addNameRange     '0.4.0',
+26 silly addNameRange     '0.4.1',
+26 silly addNameRange     '1.0.0-alpha01',
+26 silly addNameRange     '1.0.0' ] ]
+27 verbose addNamed [ 'learnyounode', '1.0.0' ]
+28 verbose addNamed [ '1.0.0', '1.0.0' ]
+29 silly lockFile 0820d686-learnyounode-1-0-0 learnyounode@1.0.0
+30 verbose lock learnyounode@1.0.0 /Users/admin/.npm/0820d686-learnyounode-1-0-0.lock
+31 silly lockFile 0820d686-learnyounode-1-0-0 learnyounode@1.0.0
+32 silly lockFile 0820d686-learnyounode-1-0-0 learnyounode@1.0.0
+33 silly lockFile a353de34-learnyounode learnyounode@
+34 silly lockFile a353de34-learnyounode learnyounode@
+35 silly resolved [ { name: 'learnyounode',
+35 silly resolved     version: '1.0.0',
+35 silly resolved     description: 'Learn You The Node.js For Much Win! An intro to Node.js via a set of self-guided workshops.',
+35 silly resolved     author:
+35 silly resolved      { name: 'Rod Vagg',
+35 silly resolved        email: 'rod@vagg.org',
+35 silly resolved        url: 'https://github.com/rvagg' },
+35 silly resolved     contributors: [ [Object], [Object], [Object], [Object], [Object], [Object] ],
+35 silly resolved     repository:
+35 silly resolved      { type: 'git',
+35 silly resolved        url: 'https://github.com/rvagg/learnyounode.git' },
+35 silly resolved     license: 'MIT',
+35 silly resolved     dependencies:
+35 silly resolved      { workshopper: '^1.0.0-alpha05',
+35 silly resolved        'workshopper-exercise': '^0.2.2',
+35 silly resolved        'workshopper-wrappedexec': '^0.1.1',
+35 silly resolved        'workshopper-boilerplate': '0.0.1',
+35 silly resolved        'concat-stream': '^1.4.1',
+35 silly resolved        duplexer: '^0.1.1',
+35 silly resolved        through: '^2.3.4',
+35 silly resolved        boganipsum: '^0.1.0',
+35 silly resolved        hyperquest: '^0.2.0',
+35 silly resolved        bl: '^0.7.0',
+35 silly resolved        'through2-map': '^1.2.1',
+35 silly resolved        'colors-tmpl': '^0.1.0',
+35 silly resolved        after: '^0.8.1',
+35 silly resolved        rimraf: '^2.2.6',
+35 silly resolved        chalk: '^0.4.0',
+35 silly resolved        through2: '^0.4.1' },
+35 silly resolved     bin: { learnyounode: './learnyounode.js' },
+35 silly resolved     preferGlobal: true,
+35 silly resolved     readme: '# Learn You The Node.js For Much Win!\n\n**An intro to Node.js via a set of self-guided workshops.**\n\n[![NPM](https://nodei.co/npm/learnyounode.png?downloads=true&stars=true)](https://nodei.co/npm/learnyounode/) [![NPM](https://nodei.co/npm-dl/learnyounode.png?months=3)](https://nodei.co/npm/learnyounode/)\n\n![Learn You The Node.js For Much Win!](https://raw.github.com/rvagg/learnyounode/master/learnyounode.png)\n\n  1. Install [Node.js](http://nodejs.org/)\n  2. Run `sudo npm install learnyounode -g`\n  3. Run `learnyounode`\n  4. **.. profit!**\n\n<b><code>learnyounode</code></b> will run through a series of Node.js workshops. Starting at a basic *"HELLO WORLD"* and moving on to more advanced exercises about dealing with synchronous & asynchronous I/O, filesystem operations, TCP and HTTP networking, events and streams.\n\nOnce you have finished <b><code>learnyounode</code></b>, graduate to <b><code>[stream-adventure](https://github.com/substack/stream-adventure)</code></b> for a set of exercises that dig in to Node\'s streams.\n\n### Contributors\n\n<b><code>learnyounode</code></b> is proudly brought to you by the following hackers:\n\n<table><tbody>\n<tr><th align="left">Rod Vagg</th><td><a href="https://github.com/rvagg">GitHub/rvagg</a></td><td><a href="http://twitter.com/rvagg">Twitter/@rvagg</a></td></tr>\n<tr><th align="left">Andrey Sidorov</th><td><a href="https://github.com/sidorares">GitHub/sidorares</a></td><td><a href="http://twitter.com/sidorares">Twitter/@sidorares</a></td></tr>\n<tr><th align="left">Julián Duque</th><td><a href="https://github.com/julianduque">GitHub/julianduque</a></td><td><a href="http://twitter.com/julian_duque">Twitter/@julian_duque</a></td></tr>\n<tr><th align="left">Lars-Magnus Skog</th><td><a href="https://github.com/ralphtheninja">GitHub/ralphtheninja</a></td><td><a href="http://twitter.com/ralphtheninja">Twitter/@ralphtheninja</a></td></tr>\n<tr><th align="left">Tim Inman</th><td><a href="https://github.com/thehack">GitHub/thehack</a></td><td><a href="http://twitter.com/timinman">Twitter/@timinman</a></td></tr>\n<tr><th align="left">Dan Flettre</th><td><a href="https://github.com/Flet">GitHub/Flet</a></td><td><a href="http://twitter.com/flettre">Twitter/@flettre</a></td></tr>\n</tbody></table>\n\n## License\n\n**learnyounode** is Copyright (c) 2013 Rod Vagg [@rvagg](https://twitter.com/rvagg) and licenced under the MIT licence. All rights not explicitly granted in the MIT license are reserved. See the included LICENSE file for more details.\n\n**learnyounode** builds on the excellent work by [@substack](https://github.com/substack) and [@maxogden](https://github.com/maxogden) who created **[stream-adventure](https://github.com/substack/stream-adventure)** which serves as the original foundation for **learnyounode**.\n',
+35 silly resolved     readmeFilename: 'README.md',
+35 silly resolved     bugs: { url: 'https://github.com/rvagg/learnyounode/issues' },
+35 silly resolved     homepage: 'https://github.com/rvagg/learnyounode',
+35 silly resolved     _id: 'learnyounode@1.0.0',
+35 silly resolved     _shasum: '95883cf7eed78a538174385c5361adf5aa9cfbb5',
+35 silly resolved     _from: 'learnyounode@',
+35 silly resolved     _resolved: 'https://registry.npmjs.org/learnyounode/-/learnyounode-1.0.0.tgz' } ]
+36 info install learnyounode@1.0.0 into /usr/local/lib
+37 info installOne learnyounode@1.0.0
+38 info /usr/local/lib/node_modules/learnyounode unbuild
+39 verbose tar unpack /Users/admin/.npm/learnyounode/1.0.0/package.tgz
+40 silly lockFile 97422473-al-lib-node-modules-learnyounode tar:///usr/local/lib/node_modules/learnyounode
+41 verbose lock tar:///usr/local/lib/node_modules/learnyounode /Users/admin/.npm/97422473-al-lib-node-modules-learnyounode.lock
+42 silly lockFile ec7b5a03-m-learnyounode-1-0-0-package-tgz tar:///Users/admin/.npm/learnyounode/1.0.0/package.tgz
+43 verbose lock tar:///Users/admin/.npm/learnyounode/1.0.0/package.tgz /Users/admin/.npm/ec7b5a03-m-learnyounode-1-0-0-package-tgz.lock
+44 silly gunzTarPerm modes [ '755', '644' ]
+45 error Error: EACCES, mkdir '/usr/local/lib/node_modules/learnyounode'
+45 error  { [Error: EACCES, mkdir '/usr/local/lib/node_modules/learnyounode']
+45 error   errno: 3,
+45 error   code: 'EACCES',
+45 error   path: '/usr/local/lib/node_modules/learnyounode',
+45 error   fstream_type: 'Directory',
+45 error   fstream_path: '/usr/local/lib/node_modules/learnyounode',
+45 error   fstream_class: 'DirWriter',
+45 error   fstream_stack:
+45 error    [ '/usr/local/lib/node_modules/npm/node_modules/fstream/lib/dir-writer.js:36:23',
+45 error      '/usr/local/lib/node_modules/npm/node_modules/mkdirp/index.js:37:53',
+45 error      'Object.oncomplete (fs.js:107:15)' ] }
+46 error Please try running this command again as root/Administrator.
+47 error System Darwin 12.5.0
+48 error command "node" "/usr/local/bin/npm" "install" "-g" "learnyounode"
+49 error cwd /Users/admin/GitPIC
+50 error node -v v0.10.28
+51 error npm -v 1.4.9
+52 error path /usr/local/lib/node_modules/learnyounode
+53 error fstream_path /usr/local/lib/node_modules/learnyounode
+54 error fstream_type Directory
+55 error fstream_class DirWriter
+56 error code EACCES
+57 error errno 3
+58 error stack Error: EACCES, mkdir '/usr/local/lib/node_modules/learnyounode'
+59 error fstream_stack /usr/local/lib/node_modules/npm/node_modules/fstream/lib/dir-writer.js:36:23
+59 error fstream_stack /usr/local/lib/node_modules/npm/node_modules/mkdirp/index.js:37:53
+59 error fstream_stack Object.oncomplete (fs.js:107:15)
+60 verbose exit [ 3, true ]

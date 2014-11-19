@@ -33,12 +33,12 @@ double L; int N, C;
 int main()
 {
   // Parametros
-  L =25.0;            // dominio de la solucion 0 <= x <= L (en longitudes de debye)
-  N =100000;            // Numero de particulas
-  C = 5000;            // Numero de celdas
+  L =100.0;            // dominio de la solucion 0 <= x <= L (en longitudes de debye)
+  N =10000;            // Numero de particulas
+  C = 4096;            // Numero de celdas
   double vb = 3.0;    // velocidad rayo promedio
   double dt=0.1;    // delta tiempo (en frecuencias inversas del plasma)
-  double tmax=10000;  // cantidad de iteraciones. deben ser 100 mil segun el material
+  double tmax=20;  // cantidad de iteraciones. deben ser 100 mil segun el material
   int skip = int (tmax / dt) / 10; //saltos del algoritmo para reportar datos
 
   vector<double> r, v, n(C); //r: posicion de las particulas, v: velocidad de particulas n: densidad de particulas por celda
@@ -116,7 +116,7 @@ int main()
       double segundos = exectime - (horas*3600) - int((exectime - (horas*3600))/60)*60;
 
 
-      cout<<"tiempo algoritmo con "<<N<<" particulas, "<<C<<" celdas, dt = "<<dt<<", iteraciones = "<<tmax<<endl;
+      cout<<"tiempo algoritmo con "<<N<<" particulas, "<<C<<" celdas, dt = "<<dt<<", iteraciones = "<<tmax/dt<<endl;
       cout<<"tiempo total en segundos: "<<exectime<<endl;
       cout<<horas<<" horas, "<<minutos<<" minutos, "<<segundos <<" segundos"<<endl;
 
@@ -165,6 +165,7 @@ si la part�cula esta en el borde del espacio de fase, coloca en la celda cero 
 void Density (vector<double> r, vector<double>& n)
 {
   // Initialize
+	double salida=0.;
   double dx = L / double (C);
   for(int x=0; x<C; x++)
   {
@@ -179,7 +180,11 @@ void Density (vector<double> r, vector<double>& n)
       n[j] += (1. - y) / dx; //se le carga el valor a la celda de la diferencia y el resto se lo carga a la celda siguiente
       if (j+1 == C) n[0] += y / dx; //en caso de estar en la ultima celda, se reinyecta el valor a la primera celda
       else n[j+1] += y / dx;
+      salida+=n[j];
     }
+
+  // cout<<salida<<endl;
+
 
 
 }
@@ -218,6 +223,12 @@ void fft_forward (vector<double>f, vector<double>&Fr, vector<double>&Fi)
         Fi[j]/=double (C);
       }
 
+  ofstream phase;
+     phase.open("forward");
+     for (int i = 0; i < C; i++)
+   	  phase<<f[i]<<" "<<Fr[i]<<" "<<Fi[i]<<endl;
+     phase.close();
+
 }
 
 void fft_backward (vector<double> Fr, vector<double> Fi, vector<double>& f)
@@ -239,6 +250,12 @@ void fft_backward (vector<double> Fr, vector<double> Fi, vector<double>& f)
   //copiando los resultados a la salida
   for (int j = 0; j < C; j++)
       f[j] = c_re(ff[j]);
+
+  ofstream phase;
+  	    phase.open("backward");
+  	    for (int i = 0; i < C; i++)
+  	  	  phase<<"IN: "<<Fr[i]<<" OUT: "<<f[i]<<endl;
+  	    phase.close();
 }
 
 //The following routine solves Poisson's equation in 1-D to find the instantaneous electric potential on a uniform grid.
@@ -270,6 +287,12 @@ void Poisson1D (vector<double>& u, vector<double> v, double kappa) // recibe el 
   // Fourier transform source term
   fft_forward (v, Vr, Vi);
 
+  ofstream init;
+  init.open("fft_forward_1D.txt");
+    for (int i = 0; i < C; i++){
+  	  init<<Vr[i]<<" "<<v[i]<<endl;
+    }
+    init.close();
 
   // calcula fft para u
   Ur[0] = Ui[0] = 0.;
@@ -283,6 +306,12 @@ void Poisson1D (vector<double>& u, vector<double> v, double kappa) // recibe el 
       Ur[j] = Ur[C-j];
       Ui[j] = - Ui[C-j];
     }
+  init.open("salida_poisson_1D.txt");
+      for (int i = 0; i < C; i++){
+    	  init<<Ur[i]<<" "<<Ui[i]<<endl;
+      }
+      init.close();
+
 
   // fft inversa para hallar u
   fft_backward (Ur, Ui, u); // saca la inversa de los vectores y obtiene el potencial.
@@ -344,6 +373,12 @@ void rhs_eval (double t, vector<double> y, vector<double>& dydt)// recibe en val
   // Calculate electric field
   Electric (phi, E);
 
+  ofstream init;
+        init.open("rho_1d.txt");
+        for (int i = 0; i < C; i++)
+        	 init<<rho[i]<<endl;
+        init.close();
+
   // Ecuaciones de movimiento
   // al tener el potencial electroestatico se obtiene las ecuacioes de movimiento.
   for (int i = 0; i < N; i++)
@@ -404,6 +439,20 @@ void rk4_fixed (double& x, vector<double>& y,
       k1[j] = h * dydx[j];
       f[j] = y[j] + k1[j] / 2.;
     }
+
+
+           	  ofstream init;
+           	        init.open("pre_2_y.txt");
+           	        for (int i = 0; i < N; i++)
+           	        	init<<y[i]<<" "<<y[N+i]<<endl;
+           	        init.close();
+
+
+           	         init.open("pre_2_f.txt");
+           	         for (int i = 0; i < N; i++)
+           	              init<<f[i]<<" "<<f[N+i]<<endl;
+           	         init.close();
+
 
   // First intermediate step
   (*rhs_eval) (x + h / 2., f, dydx);
@@ -477,7 +526,7 @@ void Output (char* fn1, char* fn2, double t,
     for (int j = 0; j < C; j++)
     {
     	double x = double (j) * L / double (C);
-    	data<<x<<" "<<ne[j]<<" "<<n[j]<<" "<<E[j]<<endl;
+    	data<<" densidad: "<<ne[j]<<" rho: "<<n[j]<<" campo "<<E[j]<<" phi: "<<phi[j]<<endl;
     }
     double x = L;
     data<<x<<" "<<ne[0]<<" "<<n[0]<<" "<<E[0]<<endl;
